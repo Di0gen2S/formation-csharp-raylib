@@ -1,10 +1,18 @@
-﻿Random random = new Random();
-string rejouer = "o";
-
+﻿// --- Programme principal ---
 do
 {
-    int nombreSecret = random.Next(1, 101);
-    int tentative = 0;
+    LancerPartie();
+    Console.WriteLine("");
+} while (DemanderRejouer());
+
+Console.WriteLine("À bientôt !");
+
+// --- Méthodes ---
+
+void LancerPartie()
+{
+    int nombreSecret = GenererNombreSecret();
+    int tentatives = 0;
     int proposition = 0;
 
     Console.WriteLine("=== Jeu du Nombre Mystère ===");
@@ -13,33 +21,49 @@ do
 
     while (proposition != nombreSecret)
     {
-        Console.Write("Ta proposition : ");
-        proposition = Convert.ToInt32(Console.ReadLine());
-        tentative++;
-
-        if (proposition < nombreSecret)
-            Console.WriteLine("Trop bas !");
-        else if (proposition > nombreSecret)
-            Console.WriteLine("Trop haut !");
-        else
-        {
-            Console.WriteLine("");
-            Console.WriteLine("Bravo ! Trouvé en " + tentative + " tentative(s) !");
-
-            if (tentative <= 5)
-                Console.WriteLine("Excellent ! Tu es une machine.");
-            else if (tentative <= 8)
-                Console.WriteLine("Bien joué !");
-            else
-                Console.WriteLine("Peut mieux faire... Essaie la stratégie 50/25/75 !");
-        }
+        proposition = DemanderProposition();
+        tentatives++;
+        AfficherIndice(proposition, nombreSecret);
     }
 
+    AfficherScore(tentatives);
+}
+
+int GenererNombreSecret()
+{
+    Random random = new Random();
+    return random.Next(1, 101);
+}
+
+int DemanderProposition()
+{
+    Console.Write("Ta proposition : ");
+    return Convert.ToInt32(Console.ReadLine());
+}
+
+void AfficherIndice(int proposition, int nombreSecret)
+{
+    if (proposition < nombreSecret)
+        Console.WriteLine("Trop bas !");
+    else if (proposition > nombreSecret)
+        Console.WriteLine("Trop haut !");
+}
+
+void AfficherScore(int tentatives)
+{
     Console.WriteLine("");
+    Console.WriteLine("Bravo ! Trouvé en " + tentatives + " tentative(s) !");
+
+    if (tentatives <= 5)
+        Console.WriteLine("Excellent ! Tu es une machine.");
+    else if (tentatives <= 8)
+        Console.WriteLine("Bien joué !");
+    else
+        Console.WriteLine("Peut mieux faire... Essaie la stratégie 50/25/75 !");
+}
+
+bool DemanderRejouer()
+{
     Console.Write("Rejouer ? (o/n) : ");
-    rejouer = Console.ReadLine();
-    Console.WriteLine("");
-
-} while (rejouer == "o");
-
-Console.WriteLine("À bientôt !");
+    return Console.ReadLine() == "o";
+}
